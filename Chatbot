@@ -1,0 +1,44 @@
+import time
+
+def get_bot_response(user_input):
+    user_input = user_input.lower().strip()
+
+    if user_input in ["hello", "hi", "hey"]:
+        return "Hi there! How can I help you today?"
+    
+    elif user_input in ["how are you", "how are you doing", "how's it going"]:
+        return "I'm doing great, thanks for asking! How about you?"
+    
+    elif "your name" in user_input:
+        return "I am AlphaBot, your friendly Python-built rule-based assistant!"
+
+    elif "what can you do" in user_input or "help" in user_input:
+        return "I can chat with you, answer basic questions, and greet you! Try asking 'how are you'."
+
+    elif user_input in ["bye", "goodbye", "exit", "quit"]:
+        return "Goodbye! Have a productive day ahead!"
+
+    else:
+        return "I'm sorry, I don't understand that. Could you ask something else?"
+
+def start_chatbot():
+    print("==========================================")
+    print("      ALPHABOT - RULE BASED CHATBOT       ")
+    print("==========================================")
+    print("Bot: Hello! Type 'bye' or 'exit' to end our chat.\n")
+
+    while True:
+        user_message = input("You: ")
+        
+        if not user_message.strip():
+            continue
+
+        response = get_bot_response(user_message)
+        time.sleep(0.3)
+        print(f"Bot: {response}\n")
+
+        if user_message.lower().strip() in ["bye", "goodbye", "exit", "quit"]:
+            break
+
+if __name__ == "__main__":
+    start_chatbot()
