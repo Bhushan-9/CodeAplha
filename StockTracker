@@ -1,0 +1,70 @@
+import csv
+
+STOCK_PRICES = {
+    "AAPL": 180,
+    "TSLA": 250,
+    "GOOGL": 140,
+    "AMZN": 175,
+    "MSFT": 400
+}
+
+def stock_tracker():
+    portfolio = {}
+    print("--- SIMPLE STOCK PORTFOLIO TRACKER ---")
+    print("Available stocks in market: ", ", ".join(STOCK_PRICES.keys()))
+    print("Type 'done' when you finish adding stocks.\n")
+
+    while True:
+        symbol = input("Enter Stock Symbol (e.g., AAPL): ").upper().strip()
+        if symbol == 'DONE':
+            break
+
+        if symbol not in STOCK_PRICES:
+            print(f"Stock '{symbol}' not found in database. Try: {', '.join(STOCK_PRICES.keys())}\n")
+            continue
+
+        try:
+            quantity = int(input(f"Enter quantity of {symbol}: "))
+            if quantity <= 0:
+                print("Quantity must be greater than 0.")
+                continue
+            
+            portfolio[symbol] = portfolio.get(symbol, 0) + quantity
+            print(f"Added {quantity} shares of {symbol} to portfolio.\n")
+
+        except ValueError:
+            print("Please enter a valid numeric integer quantity!\n")
+
+    if not portfolio:
+        print("No stocks added to the portfolio.")
+        return
+
+    print("\n" + "="*40)
+    print("        YOUR PORTFOLIO SUMMARY        ")
+    print("="*40)
+    total_value = 0.0
+
+    for symbol, qty in portfolio.items():
+        unit_price = STOCK_PRICES[symbol]
+        value = unit_price * qty
+        total_value += value
+        print(f"{symbol}: {qty} shares @ ${unit_price} each = ${value:.2f}")
+
+    print("-" * 40)
+    print(f"Total Portfolio Value: ${total_value:.2f}")
+    print("=" * 40)
+
+    save_option = input("\nDo you want to save this summary to a file? (yes/no): ").strip().lower()
+    if save_option in ['yes', 'y']:
+        filename = "portfolio_summary.csv"
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Stock Symbol", "Quantity", "Price Per Share ($)", "Total Value ($)"])
+            for symbol, qty in portfolio.items():
+                writer.writerow([symbol, qty, STOCK_PRICES[symbol], STOCK_PRICES[symbol] * qty])
+            writer.writerow([])
+            writer.writerow(["Total Portfolio Value", "", "", f"${total_value:.2f}"])
+        print(f"Portfolio saved successfully to '{filename}'!")
+
+if __name__ == "__main__":
+    stock_tracker()
